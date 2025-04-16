@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Journal - Keisha's Calm Corner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f5f0fa;
+      --text-color: #2e1d4d;
+      --accent-color: #7b61ff;
+      --nav-color: #5c45a0;
+      --card-color: #ffffff;
+      --favorite-color: gold;
+    }
+    body.dark {
+      --bg-color: #1e1440;
+      --text-color: #ffffff;
+      --nav-color: #291c5d;
+      --card-color: #322869;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    header {
+      padding: 24px;
+      text-align: center;
+    }
+    .greeting {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .main-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 16px;
+      opacity: 0.8;
+    }
+    .toggle-container {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    .toggle-container input[type="checkbox"] {
+      display: none;
+    }
+    .toggle-container label {
+      cursor: pointer;
+      background: var(--nav-color);
+      border-radius: 20px;
+      width: 48px;
+      height: 24px;
+      display: block;
+      position: relative;
+    }
+    .toggle-container label::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    .toggle-container input:checked + label::after {
+      left: 28px;
+    }
+    .journal-card {
+      max-width: 90%;
+      margin: 30px auto;
+      background: var(--card-color);
+      border-radius: 20px;
+      padding: 30px 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    select, textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .entry {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #f8f4ff;
+      border-radius: 12px;
+      position: relative;
+    }
+    .entry .date {
+      font-size: 12px;
+      opacity: 0.6;
+    }
+    .entry .favorite {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      color: gray;
+    }
+    .entry .favorite.active {
+      color: var(--favorite-color);
+    }
+    .nav {
+      background-color: var(--nav-color);
+      padding: 12px 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 16px;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+    }
+    .nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 16px;
+      transition: background 0.3s;
+    }
+    .nav a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="toggle-container">
+    <input type="checkbox" id="darkToggle">
+    <label for="darkToggle"></label>
+  </div>
+
+  <header>
+    <div class="greeting"><span id="timeGreeting"></span>, Keisha</div>
+    <div class="main-title">Journal Your Thoughts</div>
+    <div class="subtitle">Reflect and capture your mood and moments</div>
+  </header>
+
+  <div class="journal-card">
+    <select id="mood">
+      <option value="">How are you feeling?</option>
+      <option>Happy 😊</option>
+      <option>Sad 😢</option>
+      <option>Stressed 😰</option>
+      <option>Calm 😌</option>
+      <option>Excited 🤩</option>
+    </select>
+    <textarea id="entryText" rows="5" placeholder="Write your thoughts here..."></textarea>
+    <button onclick="saveEntry()">Save Entry</button>
+    <div id="entries"></div>
+  </div>
+
+  <nav class="nav">
+    <a href="meditation.html">Meditation</a>
+    <a href="affirmations.html">Affirmations</a>
+    <a href="journal.html">Journal</a>
+    <a href="rewards.html">Rewards</a>
+    <a href="trends.html">Trends</a>
+    <a href="ocd.html">OCD Exercises</a>
+  </nav>
+
+  <script>
+    const entriesContainer = document.getElementById('entries');
+
+    function setTimeGreeting() {
+      const hour = new Date().getHours();
+      const greeting = document.getElementById("timeGreeting");
+      if (hour < 12) greeting.textContent = "Good morning";
+      else if (hour < 18) greeting.textContent = "Good afternoon";
+      else greeting.textContent = "Good evening";
+    }
+
+    function saveEntry() {
+      const mood = document.getElementById('mood').value;
+      const text = document.getElementById('entryText').value.trim();
+      if (!mood || !text) return;
+
+      const entry = {
+        mood,
+        text,
+        date: new Date().toLocaleString(),
+        favorite: false
+      };
+
+      const entries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+      entries.unshift(entry);
+      localStorage.setItem('journalEntries', JSON.stringify(entries));
+      document.getElementById('entryText').value = '';
+      renderEntries();
+    }
+
+    function toggleFavorite(index) {
+      const entries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+      entries[index].favorite = !entries[index].favorite;
+      localStorage.setItem('journalEntries', JSON.stringify(entries));
+      renderEntries();
+    }
+
+    function renderEntries() {
+      const entries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+      entriesContainer.innerHTML = '';
+      entries.forEach((entry, index) => {
+        const div = document.createElement('div');
+        div.className = 'entry';
+        div.innerHTML = `
+          <div class="date">${entry.date}</div>
+          <strong>${entry.mood}</strong>
+          <p>${entry.text}</p>
+          <div class="favorite ${entry.favorite ? 'active' : ''}" onclick="toggleFavorite(${index})">&#9733;</div>
+        `;
+        entriesContainer.appendChild(div);
+      });
+    }
+
+    document.getElementById("darkToggle").addEventListener("change", () => {
+      document.body.classList.toggle("dark");
+    });
+
+    window.onload = () => {
+      setTimeGreeting();
+      renderEntries();
+    };
+  </script>
+</body>
+</html>

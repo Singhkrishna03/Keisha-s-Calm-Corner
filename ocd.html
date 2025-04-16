@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OCD Exercises - Keisha's Calm Corner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f5f0fa;
+      --text-color: #2e1d4d;
+      --accent-color: #7b61ff;
+      --nav-color: #5c45a0;
+      --card-color: #ffffff;
+      --badge-color: #ffd700;
+    }
+    body.dark {
+      --bg-color: #1e1440;
+      --text-color: #ffffff;
+      --nav-color: #291c5d;
+      --card-color: #322869;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    header {
+      padding: 24px;
+      text-align: center;
+    }
+    .greeting {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .main-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 16px;
+      opacity: 0.8;
+    }
+    .toggle-container {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    .toggle-container input[type="checkbox"] {
+      display: none;
+    }
+    .toggle-container label {
+      cursor: pointer;
+      background: var(--nav-color);
+      border-radius: 20px;
+      width: 48px;
+      height: 24px;
+      display: block;
+      position: relative;
+    }
+    .toggle-container label::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    .toggle-container input:checked + label::after {
+      left: 28px;
+    }
+    .section {
+      max-width: 90%;
+      margin: 20px auto;
+      background: var(--card-color);
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+    textarea, select, input {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+    button {
+      background-color: var(--accent-color);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .floating-bubble {
+      font-size: 18px;
+      color: #8a77ff;
+      animation: floatUp 2s ease-in forwards;
+      margin-top: 10px;
+    }
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(-60px); }
+    }
+    .badge {
+      font-size: 24px;
+      color: var(--badge-color);
+      margin-top: 10px;
+    }
+    .nav {
+      background-color: var(--nav-color);
+      padding: 12px 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 16px;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+    }
+    .nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 16px;
+      transition: background 0.3s;
+    }
+    .nav a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="toggle-container">
+    <input type="checkbox" id="darkToggle">
+    <label for="darkToggle"></label>
+  </div>
+  <header>
+    <div class="greeting"><span id="timeGreeting"></span>, Keisha</div>
+    <div class="main-title">OCD Support Exercises</div>
+    <div class="subtitle">Gentle tools to help you stay grounded</div>
+  </header>
+
+  <div class="section" id="grounding">
+    <h2>1. Grounding: 5-4-3-2-1</h2>
+    <div id="groundingSteps"></div>
+    <button onclick="nextGroundingStep()">Next</button>
+  </div>
+
+  <div class="section">
+    <h2>2. Thought Defusion</h2>
+    <input type="text" id="thoughtInput" placeholder="Type your intrusive thought...">
+    <button onclick="releaseThought()">Release</button>
+    <div id="thoughtOutput"></div>
+  </div>
+
+  <div class="section">
+    <h2>3. ERP Exposure + Timer</h2>
+    <select id="triggerSelect">
+      <option>Select a common OCD trigger</option>
+      <option>Germs / Contamination</option>
+      <option>Checking / Repeating</option>
+      <option>Perfectionism / Symmetry</option>
+      <option>Intrusive thoughts</option>
+    </select>
+    <button onclick="startERP()">Start ERP</button>
+    <div id="erpPrompt"></div>
+    <div id="erpTimer"></div>
+    <button style="display:none;" id="didItBtn" onclick="markSuccess()">I did it!</button>
+    <div id="erpBadge"></div>
+  </div>
+
+  <div class="section">
+    <h2>4. Daily OCD Affirmation</h2>
+    <div id="ocdAffirmation"></div>
+    <button onclick="newAffirmation()">New Affirmation</button>
+  </div>
+
+  <nav class="nav">
+    <a href="meditation.html">Meditation</a>
+    <a href="affirmations.html">Affirmations</a>
+    <a href="journal.html">Journal</a>
+    <a href="rewards.html">Rewards</a>
+    <a href="trends.html">Trends</a>
+    <a href="ocd.html">OCD Exercises</a>
+  </nav>
+
+  <script>
+    let groundingIndex = 0;
+    const groundingPrompts = [
+      "5 things you can see",
+      "4 things you can touch",
+      "3 things you can hear",
+      "2 things you can smell",
+      "1 thing you can taste"
+    ];
+
+    function nextGroundingStep() {
+      const div = document.getElementById("groundingSteps");
+      if (groundingIndex < groundingPrompts.length) {
+        const p = document.createElement("p");
+        p.textContent = groundingPrompts[groundingIndex];
+        div.appendChild(p);
+        groundingIndex++;
+      }
+    }
+
+    function releaseThought() {
+      const input = document.getElementById("thoughtInput").value.trim();
+      const output = document.getElementById("thoughtOutput");
+      if (input) {
+        const float = document.createElement('div');
+        float.className = 'floating-bubble';
+        float.textContent = input;
+        output.innerHTML = '';
+        output.appendChild(float);
+        setTimeout(() => {
+          output.innerHTML = "This is just a thought, not a fact.";
+        }, 2000);
+      }
+    }
+
+    const erpChallenges = {
+      "Germs / Contamination": "Touch a doorknob and delay washing your hands for 60 seconds.",
+      "Checking / Repeating": "Leave a door unlocked for 1 minute without checking it.",
+      "Perfectionism / Symmetry": "Leave an object slightly out of alignment.",
+      "Intrusive thoughts": "Write the thought down and sit with it for 60 seconds."
+    };
+
+    function startERP() {
+      const select = document.getElementById("triggerSelect");
+      const value = select.value;
+      const promptDiv = document.getElementById("erpPrompt");
+      const timerDiv = document.getElementById("erpTimer");
+      const btn = document.getElementById("didItBtn");
+      if (erpChallenges[value]) {
+        promptDiv.innerHTML = erpChallenges[value];
+        let count = 60;
+        timerDiv.innerText = "Resist for: 60s";
+        btn.style.display = 'none';
+        const interval = setInterval(() => {
+          count--;
+          timerDiv.innerText = "Resist for: " + count + "s";
+          if (count <= 0) {
+            clearInterval(interval);
+            timerDiv.innerText = "Time complete!";
+            btn.style.display = 'inline-block';
+          }
+        }, 1000);
+      }
+    }
+
+    function markSuccess() {
+      let progress = parseInt(localStorage.getItem("ocdProgress") || "0");
+      progress++;
+      localStorage.setItem("ocdProgress", progress);
+      const badge = document.getElementById("erpBadge");
+      let msg = "Great job!";
+      if (progress >= 10) msg = "Badge unlocked: Resilience Star! ⭐";
+      else if (progress >= 5) msg = "Keep going, you're halfway to a badge!";
+      badge.textContent = msg;
+    }
+
+    const affirmations = [
+      "You are not your thoughts.",
+      "You are more than OCD.",
+      "This moment is safe.",
+      "Progress over perfection.",
+      "Courage means showing up scared.",
+      "Let the thought pass like a cloud.",
+      "You are doing brave work today."
+    ];
+
+    function newAffirmation() {
+      const rand = affirmations[Math.floor(Math.random() * affirmations.length)];
+      document.getElementById("ocdAffirmation").textContent = rand;
+    }
+
+    function setTimeGreeting() {
+      const hour = new Date().getHours();
+      const greeting = document.getElementById("timeGreeting");
+      if (hour < 12) greeting.textContent = "Good morning";
+      else if (hour < 18) greeting.textContent = "Good afternoon";
+      else greeting.textContent = "Good evening";
+    }
+
+    document.getElementById("darkToggle").addEventListener("change", () => {
+      document.body.classList.toggle("dark");
+    });
+
+    window.onload = () => {
+      setTimeGreeting();
+      newAffirmation();
+    };
+  </script>
+</body>
+</html>

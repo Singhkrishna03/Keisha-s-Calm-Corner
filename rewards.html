@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rewards - Keisha's Calm Corner</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f5f0fa;
+      --text-color: #2e1d4d;
+      --accent-color: #7b61ff;
+      --nav-color: #5c45a0;
+      --card-color: #ffffff;
+      --star-color: gold;
+    }
+    body.dark {
+      --bg-color: #1e1440;
+      --text-color: #ffffff;
+      --nav-color: #291c5d;
+      --card-color: #322869;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    header {
+      padding: 24px;
+      text-align: center;
+    }
+    .greeting {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    .main-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 16px;
+      opacity: 0.8;
+    }
+    .toggle-container {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+    .toggle-container input[type="checkbox"] {
+      display: none;
+    }
+    .toggle-container label {
+      cursor: pointer;
+      background: var(--nav-color);
+      border-radius: 20px;
+      width: 48px;
+      height: 24px;
+      display: block;
+      position: relative;
+    }
+    .toggle-container label::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 16px;
+      height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    .toggle-container input:checked + label::after {
+      left: 28px;
+    }
+    .rewards-card {
+      max-width: 90%;
+      margin: 30px auto;
+      background: var(--card-color);
+      border-radius: 20px;
+      padding: 30px 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .session-count {
+      font-size: 24px;
+      margin: 20px 0;
+    }
+    .stars {
+      font-size: 36px;
+      color: var(--star-color);
+      animation: popIn 1s ease-out forwards;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+    .milestone {
+      margin-top: 20px;
+      font-size: 18px;
+      font-style: italic;
+      color: var(--accent-color);
+    }
+    .nav {
+      background-color: var(--nav-color);
+      padding: 12px 0;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      font-size: 16px;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+    }
+    .nav a {
+      color: white;
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 16px;
+      transition: background 0.3s;
+    }
+    .nav a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="toggle-container">
+    <input type="checkbox" id="darkToggle">
+    <label for="darkToggle"></label>
+  </div>
+  <header>
+    <div class="greeting"><span id="timeGreeting"></span>, Keisha</div>
+    <div class="main-title">Your Rewards</div>
+    <div class="subtitle">Celebrate your calm moments</div>
+  </header>
+
+  <div class="rewards-card">
+    <div class="session-count">Calm Sessions: <span id="sessionCount">0</span></div>
+    <div class="stars" id="starsContainer"></div>
+    <div class="milestone" id="milestoneMessage"></div>
+  </div>
+
+  <nav class="nav">
+    <a href="meditation.html">Meditation</a>
+    <a href="affirmations.html">Affirmations</a>
+    <a href="journal.html">Journal</a>
+    <a href="rewards.html">Rewards</a>
+    <a href="trends.html">Trends</a>
+    <a href="ocd.html">OCD Exercises</a>
+  </nav>
+
+  <script>
+    function setTimeGreeting() {
+      const hour = new Date().getHours();
+      const greeting = document.getElementById("timeGreeting");
+      if (hour < 12) greeting.textContent = "Good morning";
+      else if (hour < 18) greeting.textContent = "Good afternoon";
+      else greeting.textContent = "Good evening";
+    }
+
+    function loadRewards() {
+      let count = parseInt(localStorage.getItem('calmSessions') || '0');
+      document.getElementById('sessionCount').textContent = count;
+      const stars = '★'.repeat(Math.floor(count / 1)); // 1 star per session
+      document.getElementById('starsContainer').textContent = stars;
+
+      let milestone = '';
+      if (count >= 10) milestone = "10 calm sessions! You are blooming.";
+      else if (count >= 5) milestone = "You're blossoming beautifully.";
+      else if (count >= 1) milestone = "Keep going, you're doing amazing!";
+      document.getElementById('milestoneMessage').textContent = milestone;
+    }
+
+    document.getElementById("darkToggle").addEventListener("change", () => {
+      document.body.classList.toggle("dark");
+    });
+
+    window.onload = () => {
+      setTimeGreeting();
+      loadRewards();
+    };
+  </script>
+</body>
+</html>

@@ -94,10 +94,19 @@
       color: var(--star-color);
       animation: popIn 1s ease-out forwards;
     }
+    .growth-tracker {
+      font-size: 64px;
+      margin: 20px 0;
+      animation: growFade 1.2s ease-in-out;
+    }
     @keyframes popIn {
       0% { transform: scale(0); opacity: 0; }
       50% { transform: scale(1.2); opacity: 1; }
       100% { transform: scale(1); }
+    }
+    @keyframes growFade {
+      0% { opacity: 0; transform: scale(0.5); }
+      100% { opacity: 1; transform: scale(1); }
     }
     .milestone {
       margin-top: 20px;
@@ -143,6 +152,7 @@
   <div class="rewards-card">
     <div class="session-count">Calm Sessions: <span id="sessionCount">0</span></div>
     <div class="stars" id="starsContainer"></div>
+    <div class="growth-tracker" id="growthEmoji">🌱</div>
     <div class="milestone" id="milestoneMessage"></div>
   </div>
 
@@ -167,7 +177,7 @@
     function loadRewards() {
       let count = parseInt(localStorage.getItem('calmSessions') || '0');
       document.getElementById('sessionCount').textContent = count;
-      const stars = '★'.repeat(Math.floor(count / 1)); // 1 star per session
+      const stars = '★'.repeat(Math.floor(count));
       document.getElementById('starsContainer').textContent = stars;
 
       let milestone = '';
@@ -175,6 +185,12 @@
       else if (count >= 5) milestone = "You're blossoming beautifully.";
       else if (count >= 1) milestone = "Keep going, you're doing amazing!";
       document.getElementById('milestoneMessage').textContent = milestone;
+
+      let emoji = '🌱';
+      if (count >= 10) emoji = '🌳';
+      else if (count >= 7) emoji = '🌿';
+      else if (count >= 3) emoji = '🍃';
+      document.getElementById('growthEmoji').textContent = emoji;
     }
 
     document.getElementById("darkToggle").addEventListener("change", () => {

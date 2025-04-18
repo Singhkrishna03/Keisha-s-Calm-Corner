@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,6 +96,72 @@
     .log-item span {
       font-size: 18px;
     }
+    .weather-section {
+      padding: 2rem;
+      text-align: center;
+      background: linear-gradient(to bottom, #e3f2fd, #ffffff);
+      border-radius: 20px;
+      margin: 2rem auto;
+      max-width: 90%;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+      transition: background 0.6s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .weather-avatar {
+      font-size: 64px;
+      margin: 1rem 0;
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .cloud {
+      position: absolute;
+      background: #ffffffcc;
+      border-radius: 50%;
+      opacity: 0.4;
+      animation: drift 30s linear infinite;
+    }
+    .cloud:nth-child(1) {
+      width: 120px;
+      height: 60px;
+      top: 20%;
+      left: -150px;
+      animation-delay: 0s;
+    }
+    .cloud:nth-child(2) {
+      width: 100px;
+      height: 50px;
+      top: 40%;
+      left: -100px;
+      animation-delay: 10s;
+    }
+    @keyframes drift {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(120vw); }
+    }
+    .mood-options button {
+      margin: 0.5rem;
+      font-size: 1.4rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      border: none;
+      background-color: #ffffffdd;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .mood-options button:hover {
+      transform: scale(1.05);
+    }
+    .weather-message {
+      margin-top: 1.2rem;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #555;
+      min-height: 40px;
+    }
     .nav {
       background-color: var(--nav-color);
       padding: 12px 0;
@@ -136,6 +201,23 @@
     <div class="log" id="moodLog"></div>
   </div>
 
+  <section id="emotional-weather" class="weather-section">
+    <div class="cloud"></div>
+    <div class="cloud"></div>
+    <h2>🌤 Today's Emotional Weather</h2>
+    <div class="weather-avatar" id="weatherAvatar">🌤</div>
+    <div class="mood-options">
+      <button onclick="setWeather('sunny')">☀ Sunny</button>
+      <button onclick="setWeather('cloudy')">☁ Cloudy</button>
+      <button onclick="setWeather('rainy')">🌧 Rainy</button>
+      <button onclick="setWeather('stormy')">⛈ Stormy</button>
+      <button onclick="setWeather('rainbow')">🌈 Hopeful</button>
+    </div>
+    <div id="weatherMessage" class="weather-message">
+      How does your sky feel today?
+    </div>
+  </section>
+
   <nav class="nav">
     <a href="meditation.html">Meditation</a>
     <a href="affirmations.html">Affirmations</a>
@@ -168,6 +250,48 @@
         div.innerHTML = `<span>${entry.mood}</span><span>${entry.date}</span>`;
         moodLog.appendChild(div);
       });
+    }
+
+    function setWeather(mood) {
+      const message = document.getElementById('weatherMessage');
+      const section = document.getElementById('emotional-weather');
+      const avatar = document.getElementById('weatherAvatar');
+
+      let moodText = '';
+      let bgColor = '';
+      let emoji = '';
+
+      switch(mood) {
+        case 'sunny':
+          moodText = "☀ Clear and calm. Let that warmth soak in.";
+          bgColor = 'linear-gradient(to bottom, #fff9c4, #ffe082)';
+          emoji = '😎';
+          break;
+        case 'cloudy':
+          moodText = "☁ Quiet and grey. Rest is a form of progress.";
+          bgColor = 'linear-gradient(to bottom, #eceff1, #ffffff)';
+          emoji = '😌';
+          break;
+        case 'rainy':
+          moodText = "🌧 Drizzle of emotion. Feel it fully, release slowly.";
+          bgColor = 'linear-gradient(to bottom, #cfd8dc, #b0bec5)';
+          emoji = '🥺';
+          break;
+        case 'stormy':
+          moodText = "⛈ Fierce inside. You’re still here — that’s strength.";
+          bgColor = 'linear-gradient(to bottom, #90a4ae, #607d8b)';
+          emoji = '😤';
+          break;
+        case 'rainbow':
+          moodText = "🌈 Brightness through the clouds. Healing is happening.";
+          bgColor = 'linear-gradient(to bottom, #e1bee7, #fff9c4)';
+          emoji = '🌈';
+          break;
+      }
+
+      message.textContent = moodText;
+      section.style.background = bgColor;
+      avatar.textContent = emoji;
     }
 
     document.getElementById("darkToggle").addEventListener("change", () => {
